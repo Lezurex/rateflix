@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?  @db.Text
+  logo        Bytes?   @db.MediumBlob
+  ratings     Rating[]
+}
+
+model Rating {
+  id           Int      @id @default(autoincrement())
+  points       Int
+  description  String?  @db.MediumText
+  summary      String?
+  creationDate DateTime @default(now())
+  Company      Company? @relation(fields: [companyId], references: [id])
+  companyId    Int?
+}
